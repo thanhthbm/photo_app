@@ -1,6 +1,15 @@
 import { Exclude } from 'class-transformer'
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 import * as bcrypt from 'bcrypt'
+import { Photo } from 'src/photos/entities/photo.entity'
 
 @Entity('users')
 export class User {
@@ -29,6 +38,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date
 
+  @OneToMany(() => Photo, (photo) => photo.owner)
   @BeforeInsert()
   async hashPassword() {
     this.passwordHash = await bcrypt.hash(this.passwordHash, 10)
