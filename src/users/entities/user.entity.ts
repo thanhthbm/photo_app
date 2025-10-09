@@ -33,12 +33,17 @@ export class User {
   bio: string
 
   @CreateDateColumn()
-  createAt: Date
+  createdAt: Date
 
   @UpdateDateColumn()
   updatedAt: Date
 
+  @Column({ nullable: true })
+  refreshToken: string
+
   @OneToMany(() => Photo, (photo) => photo.owner)
+  photos: Photo[]
+
   @BeforeInsert()
   async hashPassword() {
     this.passwordHash = await bcrypt.hash(this.passwordHash, 10)

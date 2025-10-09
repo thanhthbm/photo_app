@@ -8,6 +8,7 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module'
 @Module({
   imports: [TypeOrmModule.forFeature([Photo]), CloudinaryModule],
   controllers: [PhotosController],
-  providers: [PhotosService]
+  providers: [PhotosService],
+  exports: [PhotosService]
 })
 export class PhotosModule {}

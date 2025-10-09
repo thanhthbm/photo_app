@@ -5,6 +5,7 @@ import { Repository } from 'typeorm'
 import { CreateUserDTO } from './dto/create-user.dto'
 import { Photo } from 'src/photos/entities/photo.entity'
 import { PhotosService } from 'src/photos/photos.service'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -39,5 +40,23 @@ export class UsersService {
     }
 
     return this.photosService.getAllPhotos(userId)
+  }
+
+  async updateRefreshToken(id: number, refreshToken: string) {
+    const refreshTokenHashed = await bcrypt.hash(refreshToken, 10)
+    await this.usersRepository.update(id, {
+      refreshToken: refreshTokenHashed
+    })
+  }
+
+  async validateRefreshToken(userId: number, refreshToken: string): Promise<User | null> {
+    const user = await this.findById(userId)
+
+    if (!user || !user.refreshToken) {
+      return null
+    }
+
+    const isMatch = await bcrypt.compare(refreshToken, user.refreshToken)
+    return isMatch ? user : null
   }
 }
