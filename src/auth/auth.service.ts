@@ -30,6 +30,11 @@ export class AuthService {
     const user = await this.usersService.create(createUserDTO)
 
     delete user.passwordHash
+
+    await this.createToken(user)
+
+    delete user.refreshToken
+
     return user
   }
 
@@ -46,6 +51,7 @@ export class AuthService {
       const { accessToken, refreshToken } = await this.createToken(user)
       const safeUser = { ...(user as any) }
       delete safeUser.passwordHash
+      delete user.refreshToken
       return { accessToken, refreshToken, user: safeUser }
     }
 

@@ -38,6 +38,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date
 
+  @Exclude()
   @Column({ nullable: true })
   refreshToken: string
 

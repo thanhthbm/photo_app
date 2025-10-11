@@ -1,10 +1,15 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
+  ParseIntPipe,
   Post,
+  Query,
   Request,
   UploadedFile,
   UseGuards,
@@ -13,6 +18,7 @@ import {
 import { PhotosService } from './photos.service'
 import { AuthGuard } from '@nestjs/passport'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { ResponseMessage } from 'src/common/decorator/response-message.decorator'
 
 @Controller('photos')
 export class PhotosController {
@@ -36,5 +42,17 @@ export class PhotosController {
     file: Express.Multer.File
   ) {
     return this.photosService.uploadPhoto(file, req.user.id, title)
+  }
+
+  @Get('user/:userId')
+  @UseGuards(AuthGuard('jwt'))
+  @ResponseMessage('Fetch photos of a user')
+  async getAllPhotos(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
+  ) {
+    console.log(1)
+    return this.photosService.getAllPhotos(userId, { page, limit })
   }
 }

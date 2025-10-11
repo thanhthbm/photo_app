@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { Repository } from 'typeorm'
@@ -12,6 +12,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+
+    @Inject(forwardRef(() => PhotosService))
     private readonly photosService: PhotosService
   ) {}
 
@@ -33,14 +35,14 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id })
   }
 
-  async getAllPhotos(userId: number): Promise<Photo[]> {
-    const user = await this.usersRepository.findOneBy({ id: userId })
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`)
-    }
+  // async getAllPhotos(userId: number): Promise<Photo[]> {
+  //   const user = await this.usersRepository.findOneBy({ id: userId })
+  //   if (!user) {
+  //     throw new NotFoundException(`User with ID ${userId} not found`)
+  //   }
 
-    return this.photosService.getAllPhotos(userId)
-  }
+  //   return this.photosService.getAllPhotos(userId)
+  // }
 
   async updateRefreshToken(id: number, refreshToken: string) {
     const refreshTokenHashed = await bcrypt.hash(refreshToken, 10)
