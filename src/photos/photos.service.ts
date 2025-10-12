@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Photo } from './entities/photo.entity'
 import { FindManyOptions, Repository } from 'typeorm'
 import { v2 as cloudinary, UploadApiResponse, UploadStream } from 'cloudinary'
 import { User } from 'src/users/entities/user.entity'
-import { take } from 'rxjs'
+import { CLOUDINARY } from 'src/cloudinary/cloudinary.provider'
 
 interface PaginationOptions {
   page: number
@@ -14,7 +14,10 @@ interface PaginationOptions {
 export class PhotosService {
   constructor(
     @InjectRepository(Photo)
-    private photosRepository: Repository<Photo>
+    private photosRepository: Repository<Photo>,
+
+    @Inject(CLOUDINARY)
+    private cloudinary
   ) {}
 
   async uploadPhoto(file: Express.Multer.File, userId: number, title: string) {
@@ -52,9 +55,7 @@ export class PhotosService {
       relations: {
         owner: true
       },
-      // 👇 Thêm 'select' để chỉ định các trường cần lấy
       select: {
-        // Các trường của chính Photo mà bạn muốn giữ lại
         id: true,
         title: true,
         description: true,
@@ -64,7 +65,6 @@ export class PhotosService {
         height: true,
         createdAt: true,
         updatedAt: true,
-        // Đối với quan hệ owner, chỉ lấy trường 'id'
         owner: {
           id: true
         }
@@ -82,7 +82,6 @@ export class PhotosService {
     ])
 
     const hasNextPage: boolean = skip + data.length < total
-    console.log(2)
     return {
       data,
       total,

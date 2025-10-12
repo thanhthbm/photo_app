@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { PhotosModule } from './photos/photos.module';
+import { FollowsModule } from './follows/follows.module';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ import { PhotosModule } from './photos/photos.module';
     CloudinaryModule,
 
     PhotosModule,
+
+    FollowsModule,
 
     
   ],

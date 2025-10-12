@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 import { Photo } from 'src/photos/entities/photo.entity'
+import { Follow } from 'src/follows/entities/follow.entity'
 
 @Entity('users')
 export class User {
@@ -44,6 +45,12 @@ export class User {
 
   @OneToMany(() => Photo, (photo) => photo.owner)
   photos: Photo[]
+
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  following: Follow[]
+
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followers: Follow[]
 
   @BeforeInsert()
   async hashPassword() {
