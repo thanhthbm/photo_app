@@ -27,7 +27,23 @@ export class CommentsService {
         photo: { id: photoId }
       },
       relations: {
-        author: true
+        author: true,
+        photo: true
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          id: true,
+          email: true,
+          fullName: true,
+          avatarUrl: true
+        },
+        photo: {
+          id: true
+        }
       },
       order: {
         createdAt: 'ASC'

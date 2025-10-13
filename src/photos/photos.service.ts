@@ -49,7 +49,10 @@ export class PhotosService {
         id: photoId
       },
       relations: {
-        owner: true
+        owner: true,
+        comments: {
+          author: true
+        }
       },
       select: {
         id: true,
@@ -66,6 +69,21 @@ export class PhotosService {
           fullName: true,
           email: true,
           avatarUrl: true
+        },
+        comments: {
+          id: true,
+          content: true,
+          createdAt: true,
+          author: {
+            id: true,
+            fullName: true,
+            avatarUrl: true
+          }
+        }
+      },
+      order: {
+        comments: {
+          createdAt: 'ASC'
         }
       }
     })
