@@ -1,35 +1,47 @@
-import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Comment } from 'src/comments/entities/comment.entity'
+import { User } from 'src/users/entities/user.entity'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
 @Entity('photos')
 export class Photo {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  title: string;
+  title: string
 
   @Column({ nullable: true })
-  description?: string;
+  description?: string
 
   @Column()
-  secureUrl: string; // url from cloudinary
+  secureUrl: string // url from cloudinary
 
   @Column()
-  publicId: string; //public id on cloudinary
+  publicId: string //public id on cloudinary
 
   @Column()
-  width: number;
+  width: number
 
   @Column()
-  height: number;
+  height: number
+
+  @OneToMany(() => Comment, (comment) => comment.photo)
+  comments: Comment[]
 
   @ManyToOne(() => User)
-  owner: User;
+  owner: User
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }

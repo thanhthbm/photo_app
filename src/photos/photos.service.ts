@@ -35,10 +35,40 @@ export class PhotosService {
       publicId: uploadResult.public_id,
       width: uploadResult.width,
       height: uploadResult.height,
-      owner: { id: userId } as User
+      owner: {
+        id: userId
+      } as User
     })
 
     return this.photosRepository.save(newPhoto)
+  }
+
+  async findById(photoId: number) {
+    return this.photosRepository.findOne({
+      where: {
+        id: photoId
+      },
+      relations: {
+        owner: true
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        secureUrl: true,
+        publicId: true,
+        width: true,
+        height: true,
+        createdAt: true,
+        updatedAt: true,
+        owner: {
+          id: true,
+          fullName: true,
+          email: true,
+          avatarUrl: true
+        }
+      }
+    })
   }
 
   //handle get all photo of a user
@@ -66,7 +96,10 @@ export class PhotosService {
         createdAt: true,
         updatedAt: true,
         owner: {
-          id: true
+          id: true,
+          fullName: true,
+          email: true,
+          avatarUrl: true
         }
       },
       skip: skip,

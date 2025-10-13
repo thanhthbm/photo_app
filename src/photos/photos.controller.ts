@@ -52,7 +52,13 @@ export class PhotosController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
   ) {
-    console.log(1)
     return this.photosService.getAllPhotos(userId, { page, limit })
+  }
+
+  @Get(':photoId')
+  @UseGuards(AuthGuard('jwt'))
+  @ResponseMessage('Photo fetched successfully')
+  async getPhoto(@Param('photoId', ParseIntPipe) photoId: number) {
+    return this.photosService.findById(photoId)
   }
 }

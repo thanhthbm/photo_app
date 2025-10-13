@@ -11,6 +11,7 @@ import {
 import * as bcrypt from 'bcrypt'
 import { Photo } from 'src/photos/entities/photo.entity'
 import { Follow } from 'src/follows/entities/follow.entity'
+import { Comment } from 'src/comments/entities/comment.entity'
 
 @Entity('users')
 export class User {
@@ -51,6 +52,9 @@ export class User {
 
   @OneToMany(() => Follow, (follow) => follow.following)
   followers: Follow[]
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[]
 
   @BeforeInsert()
   async hashPassword() {
